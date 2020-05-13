@@ -40,7 +40,7 @@ const ArtworkList = {
           rows: vnode.state.records
             .map((record) => [
               record.record_id,
-              record.locations[0].device,
+              record.locations.device,
               record.locations[0].dsize,
               record.locations[0].ddata,
               record.locations[0].ts,

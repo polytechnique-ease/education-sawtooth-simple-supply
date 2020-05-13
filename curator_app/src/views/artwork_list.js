@@ -27,9 +27,8 @@ const ArtworkList = {
     vnode.state.records = []
     var recordsFinal = []
     api.get('records').then((records) => {
-        vnode.state.records = sortBy(records, 'record_id')
-        const rec = JSON.parse(JSON.stringify(vnode.state.records))
-        for(int i = 0; i < rec.length; i++){
+        const rec = JSON.parse(JSON.stringify(sortBy(records, 'record_id')))
+        for(var i = 0; i < rec.length; i++){
           recordsFinal.push({record_id: rec[i].record_id, data: rec[i].locations[0]})
         }
         vnode.state.records = recordsFinal
@@ -46,7 +45,7 @@ const ArtworkList = {
           rows: vnode.state.records
             .map((record) => [
               record.record_id,
-              record.data.device,
+              record.record_id,
               record.data.dsize,
               record.data.ddata,
               record.data.ts,

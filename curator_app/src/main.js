@@ -48,6 +48,7 @@ const Layout = {
 
 const loggedInNav = () => {
   const links = [
+    ['/register', 'Add Sensor Data'],
     ['/artworks', 'View Sensor Registry'],
     ['/agents', 'View Agents']
   ]
@@ -60,6 +61,7 @@ const loggedInNav = () => {
 
 const loggedOutNav = () => {
   const links = [
+    ['/register', 'Add Sensor Data'],
     ['/artworks', 'View Sensor Registry'],
     ['/agents', 'View Agents']
   ]

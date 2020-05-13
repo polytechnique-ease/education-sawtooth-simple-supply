@@ -46,6 +46,10 @@ const RegisterArtworkForm = {
       m('form', { onsubmit: recordSubmitter(vnode.state) },
       m('legend', 'Add Sensor Data'),
       layout.row([
+        forms.group('Record ID', forms.field(setter('record_id'), {
+          type: 'string',
+          step: 'any',
+        })),
         forms.group('Device', forms.field(setter('device'), {
           type: 'string',
           step: 'any',

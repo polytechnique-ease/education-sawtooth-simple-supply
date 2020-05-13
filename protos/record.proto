@@ -27,11 +27,15 @@ message Record {
 
     message Location {
         // Coordinates are expected to be in millionths of a degree
-        sint64 latitude = 1;
-        sint64 longitude = 2;
+        string device = 1;
+        string ts = 2;
+        string seq = 3;
+        string ddata = 4;
+        string dsize = 5;
+        string dhash = 6;
 
         // Approximately when the location was updated, as a Unix UTC timestamp
-        uint64 timestamp = 3;
+        uint64 timestamp = 7;
     }
 
     // The user-defined natural key which identifies the object in the

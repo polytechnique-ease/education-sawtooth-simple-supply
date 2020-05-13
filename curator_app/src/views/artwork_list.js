@@ -30,6 +30,7 @@ const ArtworkList = {
         vnode.state.records = sortBy(records, 'record_id')
         var rec = JSON.parse(JSON.stringify(vnode.state.records))
         for(int i = 0; i < rec.length; i++){
+          console.log(rec[i].locations)
           vnode.state.recordsFinal.push({record_id: rec[i].record_id, data: rec[i].locations[0])
         }
       })

@@ -126,15 +126,15 @@ class Database(object):
 
     async def fetch_record_resource(self, record_id):
         fetch_record = """
-        SELECT device FROM records
-        WHERE device='{0}'
+        SELECT record_id FROM records
+        WHERE record_id='{0}'
         AND ({1}) >= start_block_num
         AND ({1}) < end_block_num;
         """.format(record_id, LATEST_BLOCK_NUM)
 
         fetch_record_locations = """
-        SELECT seq, ts, ddata, dsize, dhash FROM record_locations
-        WHERE device='{0}'
+        SELECT device, seq, ts, ddata, dsize, dhash FROM record_locations
+        WHERE record_id='{0}'
         AND ({1}) >= start_block_num
         AND ({1}) < end_block_num;
         """.format(record_id, LATEST_BLOCK_NUM)
@@ -163,7 +163,7 @@ class Database(object):
 
     async def fetch_all_record_resources(self):
         fetch_records = """
-        SELECT device FROM records
+        SELECT record_id FROM records
         WHERE ({0}) >= start_block_num
         AND ({0}) < end_block_num;
         """.format(LATEST_BLOCK_NUM)
@@ -175,9 +175,9 @@ class Database(object):
 
                 for record in records:
                     fetch_record_locations = """
-                    SELECT seq, ts, ddata, dsize, dhash
+                    SELECT device, seq, ts, ddata, dsize, dhash
                     FROM record_locations
-                    WHERE device='{0}'
+                    WHERE record_id='{0}'
                     AND ({1}) >= start_block_num
                     AND ({1}) < end_block_num;
                     """.format(record['record_id'], LATEST_BLOCK_NUM)
@@ -185,7 +185,7 @@ class Database(object):
                     fetch_record_owners = """
                     SELECT agent_id, timestamp
                     FROM record_owners
-                    WHERE device='{0}'
+                    WHERE record_id='{0}'
                     AND ({1}) >= start_block_num
                     AND ({1}) < end_block_num;
                     """.format(record['record_id'], LATEST_BLOCK_NUM)

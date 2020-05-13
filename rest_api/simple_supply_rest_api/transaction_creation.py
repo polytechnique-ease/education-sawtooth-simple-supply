@@ -64,11 +64,9 @@ def make_create_agent_transaction(transaction_signer,
 
 
 def make_create_record_transaction(transaction_signer,
-                                   batch_signer,
-                                   latitude,
-                                   longitude,
-                                   record_id,
-                                   timestamp):
+                                   batch_signer,device,
+                                   seq, ts, ddata, dsize, dhash,
+                                   timestamp,record_id):
     """Make a CreateRecordAction transaction and wrap it in a batch
 
     Args:

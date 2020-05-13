@@ -35,13 +35,17 @@ const ArtworkList = {
       m('.record-list',
         m(Table, {
           headers: [
-            'ID'
+            'ID', 'Device', 'Dsize', 'Ddata', 'TS', 'Seq', 'Dhash'
           ],
           rows: vnode.state.records
             .map((record) => [
-              m(`a[href=/artworks/${record.record_id}]`,
-                { oncreate: m.route.link },
-                record.record_id)
+              m(`${record.record_id}]`),
+              m(`${record.device}]`),
+              m(`${record.dsize}]`),
+              m(`${record.ddata}]`),
+              m(`${record.ts}]`),
+              m(`${record.seq}]`),
+              m(`${record.dhash}]`)
             ]),
           noRowsText: 'No records found'
         })

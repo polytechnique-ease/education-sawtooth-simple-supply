@@ -98,11 +98,12 @@ class RouteHandler(object):
         private_key = await self._authorize(request)
 
         body = await decode_request(request)
-        required_fields = ['seq', 'ts', 'device', 'ddata', 'dsize', 'dhash']
+        required_fields = ['record_id','seq', 'ts', 'device', 'ddata', 'dsize', 'dhash']
         validate_fields(required_fields, body)
 
         await self._messenger.send_create_record_transaction(
             private_key=private_key,
+            record_id=body.get('record_id'),
             seq=body.get('seq'),
             ts=body.get('ts'),
             device=body.get('device'),
@@ -149,13 +150,14 @@ class RouteHandler(object):
         private_key = await self._authorize(request)
 
         body = await decode_request(request)
-        required_fields = ['seq', 'ts', 'device', 'ddata', 'dsize', 'dhash']
+        required_fields = ['record_id', 'seq', 'ts', 'device', 'ddata', 'dsize', 'dhash']
         validate_fields(required_fields, body)
 
         record_id = request.match_info.get('record_id', '')
 
         await self._messenger.send_update_record_transaction(
             private_key=private_key,
+            record_id=body.get('record_id'),
             seq=body.get('seq'),
             ts=body.get('ts'),
             device=body.get('device'),

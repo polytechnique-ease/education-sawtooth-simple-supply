@@ -42,7 +42,7 @@ const ArtworkList = {
           headers: [
             'ID', 'Device', 'Dsize', 'Ddata', 'TS', 'Seq', 'Dhash'
           ],
-          rows: vnode.state.records
+          rows: vnode.state.recordsFinal
             .map((record) => [
               record.record_id,
               record.data.device,

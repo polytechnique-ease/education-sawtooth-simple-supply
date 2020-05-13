@@ -98,14 +98,17 @@ class RouteHandler(object):
         private_key = await self._authorize(request)
 
         body = await decode_request(request)
-        required_fields = ['latitude', 'longitude', 'record_id']
+        required_fields = ['seq', 'ts', 'device', 'ddata', 'dsize', 'dhash']
         validate_fields(required_fields, body)
 
         await self._messenger.send_create_record_transaction(
             private_key=private_key,
-            latitude=body.get('latitude'),
-            longitude=body.get('longitude'),
-            record_id=body.get('record_id'),
+            seq=body.get('seq'),
+            ts=body.get('ts'),
+            device=body.get('device'),
+            ddata=body.get('ddata'),
+            dsize=body.get('dsize'),
+            dhash=body.get('dhash'),
             timestamp=get_time())
 
         return json_response(
@@ -146,16 +149,19 @@ class RouteHandler(object):
         private_key = await self._authorize(request)
 
         body = await decode_request(request)
-        required_fields = ['latitude', 'longitude']
+        required_fields = ['seq', 'ts', 'device', 'ddata', 'dsize', 'dhash']
         validate_fields(required_fields, body)
 
         record_id = request.match_info.get('record_id', '')
 
         await self._messenger.send_update_record_transaction(
             private_key=private_key,
-            latitude=body['latitude'],
-            longitude=body['longitude'],
-            record_id=record_id,
+            seq=body.get('seq'),
+            ts=body.get('ts'),
+            device=body.get('device'),
+            ddata=body.get('ddata'),
+            dsize=body.get('dsize'),
+            dhash=body.get('dhash'),
             timestamp=get_time())
 
         return json_response(

@@ -40,7 +40,13 @@ const ArtworkList = {
       m('.record-list',
         m(Table, {
           headers: [
-            'ID', 'Device', 'Dsize', 'Ddata', 'TS', 'Seq', 'Dhash'
+            'ID', 
+            'Device', 
+            'Dsize', 
+            'Ddata', 
+            'TS', 
+            'Seq', 
+            'Dhash'
           ],
           rows: vnode.state.records
             .map((record) => [

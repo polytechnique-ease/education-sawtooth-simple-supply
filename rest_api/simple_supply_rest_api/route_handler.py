@@ -30,6 +30,8 @@ from simple_supply_rest_api.errors import ApiUnauthorized
 
 LOGGER = logging.getLogger(__name__)
 
+USERNAME = 'testusername'
+PASSWORD = 'testpassword'
 
 class RouteHandler(object):
     def __init__(self, loop, messenger, database):

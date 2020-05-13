@@ -52,8 +52,12 @@ message CreateRecordAction {
     string record_id = 1;
 
     // Coordinates are expected to be in millionths of a degree
-    sint64 latitude = 2;
-    sint64 longitude = 3;
+    string device = 2;
+    string ts = 3;
+    string seq = 4;
+    string ddata = 5;
+    string dsize = 6;
+    string dhash = 7;
 }
 
 
@@ -62,8 +66,12 @@ message UpdateRecordAction {
     string record_id = 1;
 
     // Coordinates are expected to be in millionths of a degree
-    sint64 latitude = 2;
-    sint64 longitude = 3;
+    string device = 2;
+    string ts = 3;
+    string seq = 4;
+    string ddata = 5;
+    string dsize = 6;
+    string dhash = 7;
 }
 
 

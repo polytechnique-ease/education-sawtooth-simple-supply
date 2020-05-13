@@ -25,13 +25,14 @@ const api = require('../services/api')
 const ArtworkList = {
   oninit (vnode) {
     vnode.state.records = []
-    vnode.state.recordsFinal = []
+    var recordsFinal = []
     api.get('records').then((records) => {
         vnode.state.records = sortBy(records, 'record_id')
         const rec = JSON.parse(JSON.stringify(vnode.state.records))
         for(int i = 0; i < rec.length; i++){
-          vnode.state.recordsFinal.push({record_id: rec[i].record_id, data: rec[i].locations[0])
+          recordsFinal.push({record_id: rec[i].record_id, data: rec[i].locations[0]})
         }
+        vnode.state.records = recordsFinal
       })
   },
 
@@ -42,15 +43,15 @@ const ArtworkList = {
           headers: [
             'ID', 'Device', 'Dsize', 'Ddata', 'TS', 'Seq', 'Dhash'
           ],
-          rows: vnode.state.recordsFinal
+          rows: vnode.state.records
             .map((record) => [
               record.record_id,
-              record.record_id,
+              record.data.device,
               record.data.dsize,
               record.data.ddata,
               record.data.ts,
               record.data.seq,
-              record.data.dhash
+              record.data.dhash,
             ]),
           noRowsText: 'No records found'
         })

@@ -54,8 +54,12 @@ CREATE_RECORD_LOCATION_STMTS = """
 CREATE TABLE IF NOT EXISTS record_locations (
     id               bigserial PRIMARY KEY,
     record_id        varchar,
-    latitude         bigint,
-    longitude        bigint,
+    device         varchar,
+    seq        varchar,
+    ts        varchar,
+    ddata        varchar,
+    dsize        varchar,
+    dhash        varchar,
     timestamp        bigint,
     start_block_num  bigint,
     end_block_num    bigint
@@ -305,16 +309,24 @@ class Database(object):
             """
             INSERT INTO record_locations (
             record_id,
-            latitude,
-            longitude,
+            device,
+            seq,
+            ts,
+            ddata,
+            dsize,
+            dhash,
             timestamp,
             start_block_num,
             end_block_num)
             VALUES ('{}', '{}', '{}', '{}', '{}', '{}');
             """.format(
                 record_dict['record_id'],
-                location['latitude'],
-                location['longitude'],
+                location['device'],
+                location['seq'],
+                location['ts'],
+                location['ddata'],
+                location['dsize'],
+                location['dhash'],,
                 location['timestamp'],
                 record_dict['start_block_num'],
                 record_dict['end_block_num'])

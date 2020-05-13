@@ -184,8 +184,13 @@ def make_update_record_transaction(transaction_signer,
 
     action = payload_pb2.UpdateRecordAction(
         record_id=record_id,
-        latitude=latitude,
-        longitude=longitude)
+        seq=seq,
+            ts=ts,
+            device=device,
+            ddata=ddata,
+            dsize=dsize,
+            dhash=dhash,
+            timestamp=timestamp)
 
     payload = payload_pb2.SimpleSupplyPayload(
         action=payload_pb2.SimpleSupplyPayload.UPDATE_RECORD,

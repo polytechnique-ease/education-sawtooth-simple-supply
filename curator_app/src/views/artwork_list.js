@@ -39,13 +39,13 @@ const ArtworkList = {
           ],
           rows: vnode.state.records
             .map((record) => [
-              m(`${record.record_id}]`),
-              m(`${record.device}]`),
-              m(`${record.dsize}]`),
-              m(`${record.ddata}]`),
-              m(`${record.ts}]`),
-              m(`${record.seq}]`),
-              m(`${record.dhash}]`)
+              record.record_id,
+              record.device,
+              record.dsize,
+              record.ddata,
+              record.ts,
+              record.seq,
+              record.dhash
             ]),
           noRowsText: 'No records found'
         })

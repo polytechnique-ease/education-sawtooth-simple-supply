@@ -101,12 +101,15 @@ def _create_record(state, public_key, payload):
         raise InvalidTransaction('Identifier {} belongs to an existing '
                                  'record'.format(payload.data.record_id))
 
-    _validate_latlng(payload.data.latitude, payload.data.longitude)
 
     state.set_record(
         public_key=public_key,
-        latitude=payload.data.latitude,
-        longitude=payload.data.longitude,
+        device=payload.data.device,
+        seq=payload.data.seq,
+        ts=payload.data.ts,
+        ddata=payload.data.ddata,
+        dhash=payload.data.dhash,
+        dsize=payload.data.dsize,
         record_id=payload.data.record_id,
         timestamp=payload.timestamp)
 
@@ -147,8 +150,12 @@ def _update_record(state, public_key, payload):
     _validate_latlng(payload.data.latitude, payload.data.longitude)
 
     state.update_record(
-        latitude=payload.data.latitude,
-        longitude=payload.data.longitude,
+        device=payload.data.device,
+        seq=payload.data.seq,
+        ts=payload.data.ts,
+        ddata=payload.data.ddata,
+        dhash=payload.data.dhash,
+        dsize=payload.data.dsize,
         record_id=payload.data.record_id,
         timestamp=payload.timestamp)
 

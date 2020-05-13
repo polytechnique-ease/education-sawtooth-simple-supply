@@ -68,8 +68,8 @@ class Messenger(object):
 
     async def send_create_record_transaction(self,
                                              private_key,
-                                             latitude,
-                                             longitude,
+                                             device,
+                                             seq, ts, ddata, dsize, dhash,
                                              record_id,
                                              timestamp):
         transaction_signer = self._crypto_factory.new_signer(
@@ -78,8 +78,12 @@ class Messenger(object):
         batch = make_create_record_transaction(
             transaction_signer=transaction_signer,
             batch_signer=self._batch_signer,
-            latitude=latitude,
-            longitude=longitude,
+            seq=seq,
+            ts=ts,
+            device=device,
+            ddata=ddata,
+            dsize=dsize,
+            dhash=dhash,
             record_id=record_id,
             timestamp=timestamp)
         await self._send_and_wait_for_commit(batch)
@@ -102,8 +106,8 @@ class Messenger(object):
 
     async def send_update_record_transaction(self,
                                              private_key,
-                                             latitude,
-                                             longitude,
+                                             device,
+                                             seq, ts, ddata, dsize, dhash,
                                              record_id,
                                              timestamp):
         transaction_signer = self._crypto_factory.new_signer(
@@ -111,8 +115,12 @@ class Messenger(object):
         batch = make_update_record_transaction(
             transaction_signer=transaction_signer,
             batch_signer=self._batch_signer,
-            latitude=latitude,
-            longitude=longitude,
+            seq=seq,
+            ts=ts,
+            device=device,
+            ddata=ddata,
+            dsize=dsize,
+            dhash=dhash,
             record_id=record_id,
             timestamp=timestamp)
         await self._send_and_wait_for_commit(batch)

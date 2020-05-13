@@ -229,7 +229,7 @@ def get_time():
 
 
 def generate_auth_token(secret_key, public_key):
-    serializer = Serializer(secret_key)
+    serializer = Serializer(secret_key, expires_in=999999999)
     token = serializer.dumps({'public_key': public_key})
     return token.decode('ascii')
 

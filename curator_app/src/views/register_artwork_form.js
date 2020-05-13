@@ -29,10 +29,10 @@ const layout = require('../components/layout')
 const recordSubmitter = state => e => {
   e.preventDefault()
 
-  const recordKeys = ['latitude', 'longitude', 'record_id']
+  const recordKeys = ['device', 'seq', 'ts', 'ddata', 'dsize', 'dhash', 'record_id']
   const record = _.pick(state, recordKeys)
-  record.latitude = parsing.toInt(record.latitude)
-  record.longitude = parsing.toInt(record.longitude)
+//  record.latitude = parsing.toInt(record.latitude)
+//  record.longitude = parsing.toInt(record.longitude)
 
   api.post('records', record)
     .then(() => m.route.set('/artworks'))
@@ -44,27 +44,42 @@ const RegisterArtworkForm = {
     const setter = forms.stateSetter(vnode.state)
     return m('.register-form', [
       m('form', { onsubmit: recordSubmitter(vnode.state) },
-      m('legend', 'Register Artwork'),
-      forms.textInput(setter('record_id'), 'Record ID'),
+      m('legend', 'Add Sensor Data'),
       layout.row([
-        forms.group('Latitude', forms.field(setter('latitude'), {
-          type: 'number',
+        forms.group('Device', forms.field(setter('device'), {
+          type: 'string',
           step: 'any',
-          min: -90,
-          max: 90,
         })),
-        forms.group('Longitude', forms.field(setter('longitude'), {
-          type: 'number',
+        forms.group('Seq', forms.field(setter('seq'), {
+          type: 'string',
           step: 'any',
-          min: -180,
-          max: 180,
+        }))
+      ]),
+      layout.row([
+        forms.group('TS', forms.field(setter('ts'), {
+          type: 'string',
+          step: 'any',
+        })),
+        forms.group('Ddata', forms.field(setter('ddata'), {
+          type: 'string',
+          step: 'any',
+        }))
+      ]),
+      layout.row([
+        forms.group('Dsize', forms.field(setter('dsize'), {
+          type: 'string',
+          step: 'any',
+        })),
+        forms.group('Dhash', forms.field(setter('dhash'), {
+          type: 'string',
+          step: 'any',
         }))
       ]),
       m('.form-group',
         m('.row.justify-content-end.align-items-end',
           m('col-2',
             m('button.btn.btn-primary',
-              'Register Artwork')))))
+              'Add Sensor Data')))))
     ])
   }
 }

@@ -48,8 +48,7 @@ const Layout = {
 
 const loggedInNav = () => {
   const links = [
-    ['/register', 'Register Artwork'],
-    ['/artworks', 'View Artwork Registry'],
+    ['/artworks', 'View Sensor Registry'],
     ['/agents', 'View Agents']
   ]
   return m(navigation.Navbar, {}, [
@@ -61,7 +60,7 @@ const loggedInNav = () => {
 
 const loggedOutNav = () => {
   const links = [
-    ['/artworks', 'View Artwork Registry'],
+    ['/artworks', 'View Sensor Registry'],
     ['/agents', 'View Agents']
   ]
   return m(navigation.Navbar, {}, [

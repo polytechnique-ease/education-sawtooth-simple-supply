@@ -92,8 +92,7 @@ class SimpleSupplyState(object):
 
     def set_record(self,
                    public_key,
-                   latitude,
-                   longitude,
+                   device, seq, ts, ddata, dsize, dhash,
                    record_id,
                    timestamp):
         """Creates a new record in state
@@ -110,8 +109,12 @@ class SimpleSupplyState(object):
             agent_id=public_key,
             timestamp=timestamp)
         location = record_pb2.Record.Location(
-            latitude=latitude,
-            longitude=longitude,
+            seq=seq,
+            ts=ts,
+            device=device,
+            ddata=ddata,
+            dsize=dsize,
+            dhash=dhash,
             timestamp=timestamp)
         record = record_pb2.Record(
             record_id=record_id,
@@ -148,10 +151,14 @@ class SimpleSupplyState(object):
         updated_state[address] = data
         self._context.set_state(updated_state, timeout=self._timeout)
 
-    def update_record(self, latitude, longitude, record_id, timestamp):
+    def update_record(self, device, seq, ts, ddata, dsize, dhash, record_id, timestamp):
         location = record_pb2.Record.Location(
-            latitude=latitude,
-            longitude=longitude,
+            seq=seq,
+            ts=ts,
+            device=device,
+            ddata=ddata,
+            dsize=dsize,
+            dhash=dhash,
             timestamp=timestamp)
         address = addresser.get_record_address(record_id)
         container = record_pb2.RecordContainer()

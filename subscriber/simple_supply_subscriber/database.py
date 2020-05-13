@@ -318,7 +318,7 @@ class Database(object):
             timestamp,
             start_block_num,
             end_block_num)
-            VALUES ('{}', '{}', '{}', '{}', '{}', '{}');
+            VALUES ('{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}');
             """.format(
                 record_dict['record_id'],
                 location['device'],

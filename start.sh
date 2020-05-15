@@ -104,5 +104,6 @@ fi;
 
 if [ $CONSENSUS = "devmode" ]; then
 
-    docker-compose -f dev.yaml up -d && docker-compose up -d
+     docker-compose up -d && docker-compose -f dev.yaml up -d
+
 fi; 

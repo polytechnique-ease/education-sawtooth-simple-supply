@@ -13,6 +13,12 @@
 # limitations under the License.
 # ------------------------------------------------------------------------------
 version: '2.1'
+
+
+volumes:
+    poet-shared:
+
+
 services:
     settings-tp:
         image: hyperledger/sawtooth-settings-tp:1.2

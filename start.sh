@@ -1,5 +1,4 @@
 #!/bin/bash
-
 CONSENSUS="$1"
 CODE="bash -c \"\
         sawadm keygen --force && \
@@ -39,7 +38,7 @@ CODE="bash -c \"\
           --network-auth trust
     \""
 if [ $CONSENSUS = "pbft" ]; then
-   CODE="bash -c \"
+  CODE="bash -c \"
         if [ -e /pbft-shared/validators/validator.priv ]; then
           cp /pbft-shared/validators/validator.pub /etc/sawtooth/keys/validator.pub
           cp /pbft-shared/validators/validator.priv /etc/sawtooth/keys/validator.priv
@@ -47,8 +46,8 @@ if [ $CONSENSUS = "pbft" ]; then
         if [ ! -e /etc/sawtooth/keys/validator.priv ]; then
           sawadm keygen
           mkdir -p /pbft-shared/validators || true
-          cp /etc/sawtooth/keys/validator.pub /pbft-shared/validators/validator-0.pub
-          cp /etc/sawtooth/keys/validator.priv /pbft-shared/validators/validator-0.priv
+          cp /etc/sawtooth/keys/validator.pub /pbft-shared/validators/validator.pub
+          cp /etc/sawtooth/keys/validator.priv /pbft-shared/validators/validator.priv
         fi &&
         if [ ! -e config-genesis.batch ]; then
           sawset genesis -k /etc/sawtooth/keys/validator.priv -o config-genesis.batch
@@ -61,7 +60,7 @@ if [ $CONSENSUS = "pbft" ]; then
             -k /etc/sawtooth/keys/validator.priv \
             sawtooth.consensus.algorithm.name=pbft \
             sawtooth.consensus.algorithm.version=1.0 \
-                        sawtooth.consensus.pbft.members=\\['\"'$$(cat /pbft-shared/validators/validator.pub)'\"'\\] \
+            sawtooth.consensus.pbft.members=\\['\"'$$(cat /pbft-shared/validators/validator.pub)'\"'\\] \
             sawtooth.publisher.max_batches_per_block=1200 \
             -o config.batch
         fi &&
@@ -72,7 +71,7 @@ if [ $CONSENSUS = "pbft" ]; then
           sawtooth keygen my_key
         fi &&
         sawtooth-validator -vv \
-          --endpoint tcp://validator-0:8800 \
+          --endpoint tcp://validator:8800 \
           --bind component:tcp://eth0:4004 \
           --bind consensus:tcp://eth0:5050 \
           --bind network:tcp://eth0:8800 \
@@ -81,10 +80,8 @@ if [ $CONSENSUS = "pbft" ]; then
           --maximum-peer-connectivity 10000
       \" "
 fi;
-
 if [ $CONSENSUS = "devmode" ]; then
-
-CODE="sawadm keygen \
+  CODE="sawadm keygen \
         sawtooth keygen my_key \
         sawset genesis -k /root/.sawtooth/keys/my_key.priv \
         sawset proposal create -k /root/.sawtooth/keys/my_key.priv \
@@ -96,9 +93,16 @@ CODE="sawadm keygen \
           --endpoint tcp://validator:8800 \
           --bind component:tcp://eth0:4004 \
           --bind network:tcp://eth0:8800 \
-          --bind consensus:tcp://eth0:5050" 
+          --bind consensus:tcp://eth0:5050"       
 fi;
-
 export CMD=$CODE
 
-docker-compose up 
+if [ $CONSENSUS = "pbft" ]; then
+
+    docker-compose -f pbft.yaml up -d && docker-compose up
+fi;
+
+if [ $CONSENSUS = "devmode" ]; then
+
+    docker-compose -f dev.yaml up -d && docker-compose up
+fi; 

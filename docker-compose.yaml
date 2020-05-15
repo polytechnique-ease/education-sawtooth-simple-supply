@@ -1,5 +1,5 @@
-version: '2.1'
 
+version: '2.1'
 services:
   simple-supply-shell:
     build:
@@ -99,6 +99,39 @@ services:
     ports:
       - '4004:4004'
     command: ${CMD}
+
+  devmode-engine:
+    image: hyperledger/sawtooth-devmode-engine-rust:1.2
+    expose:
+      - 5050
+    ports:
+      - '5050:5050'
+    container_name: sawtooth-devmode-engine-rust-default
+    depends_on:
+      - validator
+    entrypoint: devmode-engine-rust --connect tcp://validator:5050
+
+  intkey-tp-0:
+    image: hyperledger/sawtooth-intkey-tp-python:chime
+    container_name: sawtooth-intkey-tp-python-default-0
+    expose:
+      - 4004
+    command: intkey-tp-python -C tcp://validator:4004
+    stop_signal: SIGKILL
+
+  pbft:
+    image: hyperledger/sawtooth-pbft-engine:chime
+    container_name: sawtooth-pbft-engine-default-0
+    command: pbft-engine -vv --connect tcp://validator:5050
+    stop_signal: SIGKILL
+
+  xo-tp-0:
+    image: hyperledger/sawtooth-xo-tp-python:chime
+    container_name: sawtooth-xo-tp-python-default-0
+    expose:
+      - 4004
+    command: xo-tp-python -vv -C tcp://validator:4004
+    stop_signal: SIGKILL
   postgres:
     image: postgres:alpine
     container_name: simple-supply-postgres
@@ -127,5 +160,4 @@ services:
       - '8040:80'
     depends_on:
       - simple-supply-shell
-      - simple-supply-rest-api 
-
+      - simple-supply-rest-api

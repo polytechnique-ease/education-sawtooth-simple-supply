@@ -3,8 +3,8 @@
 CONSENSUS="$1"
 CODE="bash -c \"\
         sawadm keygen --force && \
-        mkdir -p /poet-shared/validator-0 || true && \
-        cp -a /etc/sawtooth/keys /poet-shared/validator-0/ && \
+        mkdir -p /poet-shared/validator || true && \
+        cp -a /etc/sawtooth/keys /poet-shared/validator/ && \
         while [ ! -f /poet-shared/poet-enclave-measurement ]; do sleep 1; done && \
         while [ ! -f /poet-shared/poet-enclave-basename ]; do sleep 1; done && \
         while [ ! -f /poet-shared/poet.batch ]; do sleep 1; done && \
@@ -34,15 +34,15 @@ CODE="bash -c \"\
           --bind component:tcp://eth0:4004 \
           --bind consensus:tcp://eth0:5050 \
           --peering static \
-          --endpoint tcp://validator-0:8800 \
+          --endpoint tcp://validator:8800 \
           --scheduler parallel \
           --network-auth trust
     \""
 if [ $CONSENSUS = "pbft" ]; then
    CODE="bash -c \"
-        if [ -e /pbft-shared/validators/validator-0.priv ]; then
-          cp /pbft-shared/validators/validator-0.pub /etc/sawtooth/keys/validator.pub
-          cp /pbft-shared/validators/validator-0.priv /etc/sawtooth/keys/validator.priv
+        if [ -e /pbft-shared/validators/validator.priv ]; then
+          cp /pbft-shared/validators/validator.pub /etc/sawtooth/keys/validator.pub
+          cp /pbft-shared/validators/validator.priv /etc/sawtooth/keys/validator.priv
         fi &&
         if [ ! -e /etc/sawtooth/keys/validator.priv ]; then
           sawadm keygen
@@ -55,13 +55,13 @@ if [ $CONSENSUS = "pbft" ]; then
         fi &&
         while [[ ! -f /pbft-shared/validators/validator-1.pub ]];
         do sleep 1; done
-        echo sawtooth.consensus.pbft.members=\\['\"'$$(cat /pbft-shared/validators/validator-0.pub)'\"'\\] &&
+        echo sawtooth.consensus.pbft.members=\\['\"'$$(cat /pbft-shared/validators/validator.pub)'\"'\\] &&
         if [ ! -e config.batch ]; then
          sawset proposal create \
             -k /etc/sawtooth/keys/validator.priv \
             sawtooth.consensus.algorithm.name=pbft \
             sawtooth.consensus.algorithm.version=1.0 \
-            sawtooth.consensus.pbft.members=\\['\"'$$(cat /pbft-shared/validators/validator-0.pub)'\"'\\] \
+                        sawtooth.consensus.pbft.members=\\['\"'$$(cat /pbft-shared/validators/validator.pub)'\"'\\] \
             sawtooth.publisher.max_batches_per_block=1200 \
             -o config.batch
         fi &&
@@ -91,7 +91,12 @@ CODE="sawadm keygen \
         sawtooth.consensus.algorithm.name=Devmode \
         sawtooth.consensus.algorithm.version=0.1 \
         -o config.batch \
-        sawadm genesis config-genesis.batch config.batch"       
+        sawadm genesis config-genesis.batch config.batch\
+        sawtooth-validator -vv \
+          --endpoint tcp://validator:8800 \
+          --bind component:tcp://eth0:4004 \
+          --bind network:tcp://eth0:8800 \
+          --bind consensus:tcp://eth0:5050" 
 fi;
 
 export CMD=$CODE

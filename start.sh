@@ -80,30 +80,26 @@ if [ $CONSENSUS = "pbft" ]; then
           --maximum-peer-connectivity 10000
       \" "
 fi;
+
 if [ $CONSENSUS = "devmode" ]; then
-  CODE="sawadm keygen \
-        sawtooth keygen my_key \
-        sawset genesis -k /root/.sawtooth/keys/my_key.priv \
-        sawset proposal create -k /root/.sawtooth/keys/my_key.priv \
-        sawtooth.consensus.algorithm.name=Devmode \
-        sawtooth.consensus.algorithm.version=0.1 \
-        -o config.batch \
-        sawadm genesis config-genesis.batch config.batch\
+ CODE="
+    bash -c \"
+        if [ ! -f /etc/sawtooth/keys/validator.priv ]; then
+          sawadm keygen
+          sawtooth keygen my_key
+          sawset genesis -k /root/.sawtooth/keys/my_key.priv
+          sawset proposal create -k /root/.sawtooth/keys/my_key.priv \
+            sawtooth.consensus.algorithm.name=Devmode \
+            sawtooth.consensus.algorithm.version=0.1 \
+            -o config.batch
+          sawadm genesis config-genesis.batch config.batch
+        fi;
         sawtooth-validator -vv \
           --endpoint tcp://validator:8800 \
           --bind component:tcp://eth0:4004 \
           --bind network:tcp://eth0:8800 \
-          --bind consensus:tcp://eth0:5050"       
+          --bind consensus:tcp://eth0:5050
+    \""       
 fi;
+
 export CMD=$CODE
-
-if [ $CONSENSUS = "pbft" ]; then
-
-    docker-compose -f pbft.yaml up -d && docker-compose up -d
-fi;
-
-if [ $CONSENSUS = "devmode" ]; then
-
-     docker-compose up -d && docker-compose -f dev.yaml up -d
-
-fi; 

@@ -122,7 +122,7 @@ services:
   pbft:
     image: hyperledger/sawtooth-pbft-engine:chime
     container_name: sawtooth-pbft-engine-default-0
-    command: pbft-engine -vv --connect tcp://validator:5050
+    command: pbft-engine -vv --connect tcp://validator:5051
     stop_signal: SIGKILL
 
   xo-tp-0:

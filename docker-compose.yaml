@@ -101,6 +101,8 @@
       container_name: sawtooth-validator
       expose:
         - 4004
+        - 5050
+        - 8800
       ports:
         - '4004:4004'
       command: |
@@ -138,8 +140,10 @@
       container_name: simple-supply-postgres
       restart: always
       environment:
-        POSTGRES_USER: sawtooth
-        POSTGRES_PASSWORD: sawtooth
+        POSTGRES_USER: sawtooth      - 4004
+
+        POSTGRES_PASSWORD: sawtooth      - 4004
+
         POSTGRES_DB: simple-supply
       ports:
         - '5432:5432'

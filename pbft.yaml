@@ -450,7 +450,7 @@ services:
     container_name: sawtooth-xo-tp-python-default-4
     expose:
       - 4004
-    command: xo-tp-python -vv -C tcp://validator:4004
+    command: xo-tp-python -vv -C tcp://validator-4:4004
     stop_signal: SIGKILL
 
   

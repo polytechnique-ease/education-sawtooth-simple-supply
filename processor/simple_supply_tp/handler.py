@@ -101,7 +101,6 @@ def _create_record(state, public_key, payload):
         raise InvalidTransaction('Identifier {} belongs to an existing '
                                  'record'.format(payload.data.record_id))
 
-
     state.set_record(
         public_key=public_key,
         device=payload.data.device,

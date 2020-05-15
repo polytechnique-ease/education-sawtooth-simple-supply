@@ -326,7 +326,7 @@ class Database(object):
                 location['ts'],
                 location['ddata'],
                 location['dsize'],
-                location['dhash'],,
+                location['dhash'],
                 location['timestamp'],
                 record_dict['start_block_num'],
                 record_dict['end_block_num'])

@@ -1,10 +1,26 @@
-  version: '2.1'
-  services:
+# Copyright 2018 Intel Corporation
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# ------------------------------------------------------------------------------
 
+  version: '2.1'
+
+  services:
+  
     simple-supply-shell:
       build:
         context: .
-    dockerfile: ./shell/Dockerfile
+        dockerfile: ./shell/Dockerfile
       image: sawtooth-simple-supply-shell
       container_name: simple-supply-shell
       volumes:
@@ -18,7 +34,8 @@
           cd ../
           tail -f /dev/null
         "
-   simple-supply-tp:
+  
+    simple-supply-tp:
       build:
           context: .
           dockerfile: ./processor/Dockerfile
@@ -77,84 +94,25 @@
             -C tcp://validator:4004 \
             -vv
         "
-  
-    settings-tp:
-      image: hyperledger/sawtooth-settings-tp:1.2
-      container_name: sawtooth-settings-tp
-      depends_on:
-        - validator
-      entrypoint: settings-tp -vv -C tcp://validator:4004
-
-    rest-api:
-      image: hyperledger/sawtooth-rest-api:1.2
-      container_name: sawtooth-rest-api
-      expose:
-        - 8008
-      ports:
-        - '8008:8008'
-      depends_on:
-        - validator
-      entrypoint: sawtooth-rest-api -vv -C tcp://validator:4004 --bind rest-api:8008
-
-    validator:
-      image: hyperledger/sawtooth-validator:1.2
-      container_name: sawtooth-validator
-      expose:
-        - 4004
-        - 5050
-        - 8800
-      ports:
-        - '4004:4004'
-      command: |
-        bash -c "
-          if [ ! -f /etc/sawtooth/keys/validator.priv ]; then
-            sawadm keygen
-            sawtooth keygen my_key
-            sawset genesis -k /root/.sawtooth/keys/my_key.priv
-            sawset proposal create -k /root/.sawtooth/keys/my_key.priv \
-              sawtooth.consensus.algorithm.name=Devmode \
-              sawtooth.consensus.algorithm.version=0.1 \
-              -o config.batch
-            sawadm genesis config-genesis.batch config.batch
-          fi;
-          sawtooth-validator -vv \
-            --endpoint tcp://validator:8800 \
-            --bind component:tcp://eth0:4004 \
-            --bind network:tcp://eth0:8800 \
-            --bind consensus:tcp://eth0:5050
-        "
-  
-    devmode-engine:
-      image: hyperledger/sawtooth-devmode-engine-rust:1.2
-      expose:
-        - 5050
-      ports:
-        - '5050:5050'
-      container_name: sawtooth-devmode-engine-rust-default
-      depends_on:
-        - validator
-      entrypoint: devmode-engine-rust --connect tcp://validator:5050
 
     postgres:
       image: postgres:alpine
       container_name: simple-supply-postgres
       restart: always
       environment:
-        POSTGRES_USER: sawtooth      - 4004
-
-        POSTGRES_PASSWORD: sawtooth      - 4004
-
+        POSTGRES_USER: sawtooth
+        POSTGRES_PASSWORD: sawtooth
         POSTGRES_DB: simple-supply
       ports:
         - '5432:5432'
-
+  
     adminer:
       image: adminer
       container_name: simple-supply-adminer
       restart: always
       ports:
         - '8090:8090'
-
+  
     curator-app:
       build: ./curator_app
       image: simple-supply-curator-app
@@ -168,4 +126,4 @@
       depends_on:
         - simple-supply-shell
         - simple-supply-rest-api
-
+  

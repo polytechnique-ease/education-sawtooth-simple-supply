@@ -107,7 +107,7 @@ class Messenger(object):
     async def send_update_record_transaction(self,
                                              private_key,
                                              device,
-                                             seq, ts, ddata, dsize, dhash,
+                                   seq, ts, ddata, dsize, dhash,
                                              record_id,
                                              timestamp):
         transaction_signer = self._crypto_factory.new_signer(

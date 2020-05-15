@@ -31,8 +31,8 @@ const recordSubmitter = state => e => {
 
   const recordKeys = ['device', 'seq', 'ts', 'ddata', 'dsize', 'dhash', 'record_id']
   const record = _.pick(state, recordKeys)
-//  record.latitude = parsing.toInt(record.latitude)
-//  record.longitude = parsing.toInt(record.longitude)
+//   record.latitude = parsing.toInt(record.latitude)
+//   record.longitude = parsing.toInt(record.longitude)
 
   api.post('records', record)
     .then(() => m.route.set('/artworks'))

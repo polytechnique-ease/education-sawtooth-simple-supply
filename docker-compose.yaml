@@ -12,11 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ------------------------------------------------------------------------------
-
 version: '2.1'
-
 services:
-
   simple-supply-shell:
     build:
       context: .
@@ -34,7 +31,6 @@ services:
         cd ../
         tail -f /dev/null
       "
-
   simple-supply-tp:
     build:
         context: .
@@ -50,7 +46,6 @@ services:
         sleep 1
         simple-supply-tp -v -C tcp://validator:4004
       "
-
   simple-supply-rest-api:
     build:
       context: .
@@ -71,7 +66,6 @@ services:
           --db-host postgres \
           -vv
       "
-
   simple-supply-subscriber:
     build:
       context: .
@@ -94,7 +88,6 @@ services:
           -C tcp://validator:4004 \
           -vv
       "
-
   settings-tp:
     image: hyperledger/sawtooth-settings-tp:1.2
     container_name: sawtooth-settings-tp
@@ -123,7 +116,7 @@ services:
     command: |
       bash -c "
         if [ ! -f /etc/sawtooth/keys/validator.priv ]; then
-        ${CMD}
+        $CMD
         fi;
         sawtooth-validator -vv \
           --endpoint tcp://validator:8800 \
@@ -131,7 +124,6 @@ services:
           --bind network:tcp://eth0:8800 \
           --bind consensus:tcp://eth0:5050
       "
-
   devmode-engine:
     image: hyperledger/sawtooth-devmode-engine-rust:1.2
     expose:
@@ -146,31 +138,4 @@ services:
   postgres:
     image: postgres:alpine
     container_name: simple-supply-postgres
-    restart: always
-    environment:
-      POSTGRES_USER: sawtooth
-      POSTGRES_PASSWORD: sawtooth
-      POSTGRES_DB: simple-supply
-    ports:
-      - '5432:5432'
 
-  adminer:
-    image: adminer
-    container_name: simple-supply-adminer
-    restart: always
-    ports:
-      - '8090:8090'
-
-  curator-app:
-    build: ./curator_app
-    image: simple-supply-curator-app
-    container_name: curator-app
-    volumes:
-      - ./curator_app/public/:/usr/local/apache2/htdocs/
-    expose:
-      - 80
-    ports:
-      - '8040:80'
-    depends_on:
-      - simple-supply-shell
-      - simple-supply-rest-api

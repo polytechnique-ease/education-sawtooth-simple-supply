@@ -12,18 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ------------------------------------------------------------------------------
-
 version: '2.1'
-
 services:
-
     settings-tp:
         image: hyperledger/sawtooth-settings-tp:1.2
         container_name: sawtooth-settings-tp
         depends_on:
             - validator-0
         entrypoint: settings-tp -vv -C tcp://validator-0:4004
-
     rest-api:
         image: hyperledger/sawtooth-rest-api:1.2
         container_name: sawtooth-rest-api
@@ -34,7 +30,6 @@ services:
         depends_on:
             - validator-0
         entrypoint: sawtooth-rest-api -vv -C tcp://validator-0:4004 --bind rest-api:8008
-
     validator-0:
         image: hyperledger/sawtooth-validator:1.2
         container_name: sawtooth-validator
@@ -60,7 +55,6 @@ services:
                 --bind network:tcp://eth0:8800 \
                 --bind consensus:tcp://eth0:5050
             "
-
     devmode-engine:
         image: hyperledger/sawtooth-devmode-engine-rust:1.2
         expose:
@@ -70,5 +64,4 @@ services:
         container_name: sawtooth-devmode-engine-rust-default
         depends_on:
             - validator-0
-        entrypoint: devmode-engine-rust --connect tcp://validator-0:5050
-        
+        entrypoint: devmode-engine-rust --connect tcp://validator-0:5050 

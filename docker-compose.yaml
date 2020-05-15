@@ -115,8 +115,8 @@ services:
     image: hyperledger/sawtooth-intkey-tp-python:chime
     container_name: sawtooth-intkey-tp-python-default-0
     expose:
-      - 4004
-    command: intkey-tp-python -C tcp://validator:4004
+      - 4005
+    command: intkey-tp-python -C tcp://validator:4005
     stop_signal: SIGKILL
 
   pbft:
@@ -129,8 +129,8 @@ services:
     image: hyperledger/sawtooth-xo-tp-python:chime
     container_name: sawtooth-xo-tp-python-default-0
     expose:
-      - 4004
-    command: xo-tp-python -vv -C tcp://validator:4004
+      - 4006
+    command: xo-tp-python -vv -C tcp://validator:4006
     stop_signal: SIGKILL
   postgres:
     image: postgres:alpine

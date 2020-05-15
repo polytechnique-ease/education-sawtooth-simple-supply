@@ -99,10 +99,10 @@ export CMD=$CODE
 
 if [ $CONSENSUS = "pbft" ]; then
 
-    docker-compose -f pbft.yaml up -d && docker-compose up
+    docker-compose -f pbft.yaml up -d && docker-compose up -d
 fi;
 
 if [ $CONSENSUS = "devmode" ]; then
 
-    docker-compose -f dev.yaml up -d && docker-compose up
+    docker-compose -f dev.yaml up -d && docker-compose up -d
 fi; 

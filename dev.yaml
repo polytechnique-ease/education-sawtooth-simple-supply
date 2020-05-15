@@ -1,0 +1,13 @@
+version: '2.1'
+
+services: 
+
+  devmode-engine:
+    image: hyperledger/sawtooth-devmode-engine-rust:1.2
+@@ -63,4 +26,4 @@ services:
+    container_name: sawtooth-devmode-engine-rust-default
+    depends_on:
+      - validator
+
+    entrypoint: devmode-engine-rust --connect tcp://validator:5050 
+

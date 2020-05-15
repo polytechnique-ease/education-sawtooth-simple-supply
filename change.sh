@@ -35,7 +35,7 @@ fi;
 if [ $CONSENSUS = "devmode" ]; then
     docker exec sawtooth-validator bash -c '
         sawadm keygen --force
-        sawtooth keygen my_key
+        sawtooth keygen --force my_key
         sawset genesis -k /root/.sawtooth/keys/my_key.priv
         sawset proposal create -k /root/.sawtooth/keys/my_key.priv \
         sawtooth.consensus.algorithm.name=Devmode \

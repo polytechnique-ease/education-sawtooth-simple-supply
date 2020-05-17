@@ -50,20 +50,26 @@ if [ $CONSENSUS = "devmode" ]; then
         sawset proposal create -k /etc/sawtooth/keys/validator.priv \
         sawtooth.consensus.algorithm.name=Devmode \
         sawtooth.consensus.algorithm.version=0.1 \
-        -o config.batch'
+        sawtooth.consensus.raft.peers=["$(cat /etc/sawtooth/keys/validator.pub)"] -o config.batch && \
+        if [ ! -e /var/lib/sawtooth/genesis.batch ]; then
+          sawadm genesis config-genesis.batch config.batch
+        fi &&
 fi;
 
 
 if [ $CONSENSUS = "raft" ]; then
     docker exec sawtooth-validator bash -c '
-        sawset proposal create --url http://ec2-34-207-173-85.compute-1.amazonaws.com:8008 -k /etc/sawtooth/keys/validator.priv \
+        if [ ! -e config-genesis.batch ]; then
+          sawset genesis -k /etc/sawtooth/keys/validator.priv -o config-genesis.batch
+        fi &&
+        sawset proposal create -k /etc/sawtooth/keys/validator.priv \
         sawtooth.consensus.algorithm.name=raft \
         sawtooth.consensus.algorithm.version=0.1 \
         sawtooth.consensus.raft.peers=["$(cat /etc/sawtooth/keys/validator.pub)"] && \
         sawtooth-validator -vv \
           --endpoint tcp://validator:8800 \
           --bind consensus:tcp://eth0:5050 \
-          --bind network:tcp://eth0:8800 \
+          --bind component:tcp://*:* \
           --peering static
         '
 fi;

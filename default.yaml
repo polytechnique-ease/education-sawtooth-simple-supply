@@ -52,9 +52,8 @@ services:
             bash -c "
             if [ ! -f /etc/sawtooth/keys/validator.priv ]; then
                 sawadm keygen --force
-                sawtooth keygen my_key
-                sawset genesis -k /root/.sawtooth/keys/my_key.priv
-                sawset proposal create -k /root/.sawtooth/keys/my_key.priv \
+                sawset genesis -k /etc/sawtooth/keys/validator.priv
+                sawset proposal create /etc/sawtooth/keys/validator.priv \
                 sawtooth.consensus.algorithm.name=Devmode \
                 sawtooth.consensus.algorithm.version=0.1 \
                 -o config.batch

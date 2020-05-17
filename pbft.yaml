@@ -1,3 +1,4 @@
+
 # Copyright 2019 Cargill Incorporated
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -186,60 +187,60 @@ services:
 
 # -------------=== validators ===-------------
 
-  validator-0:
-    image: hyperledger/sawtooth-validator:chime
-    container_name: sawtooth-validator-default-0
-    expose:
-      - 4004
-      - 5050
-      - 8800
-    volumes:
-      - pbft-shared:/pbft-shared
-    command: |
-      bash -c "
-        if [ -e /pbft-shared/validators/validator.priv ]; then
-          cp /pbft-shared/validators/validator.pub /etc/sawtooth/keys/validator.pub
-          cp /pbft-shared/validators/validator.priv /etc/sawtooth/keys/validator.priv
-        fi &&
-        if [ ! -e /etc/sawtooth/keys/validator.priv ]; then
-          sawadm keygen
-          mkdir -p /pbft-shared/validators || true
-          cp /etc/sawtooth/keys/validator.pub /pbft-shared/validators/validator.pub
-          cp /etc/sawtooth/keys/validator.priv /pbft-shared/validators/validator.priv
-        fi &&
-        if [ ! -e config-genesis.batch ]; then
-          sawset genesis -k /etc/sawtooth/keys/validator.priv -o config-genesis.batch
-        fi &&
-        while [[ ! -f /pbft-shared/validators/validator-1.pub || \
-                 ! -f /pbft-shared/validators/validator-2.pub || \
-                 ! -f /pbft-shared/validators/validator-3.pub || \
-                 ! -f /pbft-shared/validators/validator-4.pub ]];
-        do sleep 1; done
-        echo sawtooth.consensus.pbft.members=\\['\"'$$(cat /pbft-shared/validators/validator.pub)'\"','\"'$$(cat /pbft-shared/validators/validator-1.pub)'\"','\"'$$(cat /pbft-shared/validators/validator-2.pub)'\"','\"'$$(cat /pbft-shared/validators/validator-3.pub)'\"','\"'$$(cat /pbft-shared/validators/validator-4.pub)'\"'\\] &&
-        if [ ! -e config.batch ]; then
-         sawset proposal create \
-            -k /etc/sawtooth/keys/validator.priv \
-            sawtooth.consensus.algorithm.name=pbft \
-            sawtooth.consensus.algorithm.version=1.0 \
-            sawtooth.consensus.pbft.members=\\['\"'$$(cat /pbft-shared/validators/validator.pub)'\"','\"'$$(cat /pbft-shared/validators/validator-1.pub)'\"','\"'$$(cat /pbft-shared/validators/validator-2.pub)'\"','\"'$$(cat /pbft-shared/validators/validator-3.pub)'\"','\"'$$(cat /pbft-shared/validators/validator-4.pub)'\"'\\] \
-            sawtooth.publisher.max_batches_per_block=1200 \
-            -o config.batch
-        fi &&
-        if [ ! -e /var/lib/sawtooth/genesis.batch ]; then
-          sawadm genesis config-genesis.batch config.batch
-        fi &&
-        if [ ! -e /root/.sawtooth/keys/my_key.priv ]; then
-          sawtooth keygen my_key
-        fi &&
-        sawtooth-validator -vv \
-          --endpoint tcp://validator-0:8800 \
-          --bind component:tcp://eth0:4004 \
-          --bind consensus:tcp://eth0:5050 \
-          --bind network:tcp://eth0:8800 \
-          --scheduler parallel \
-          --peering static \
-          --maximum-peer-connectivity 10000
-      "
+  # validator-0:
+  #   image: hyperledger/sawtooth-validator:chime
+  #   container_name: sawtooth-validator-default-0
+  #   expose:
+  #     - 4004
+  #     - 5050
+  #     - 8800
+  #   volumes:
+  #     - pbft-shared:/pbft-shared
+  #   command: |
+  #     bash -c "
+  #       if [ -e /pbft-shared/validators/validator.priv ]; then
+  #         cp /pbft-shared/validators/validator.pub /etc/sawtooth/keys/validator.pub
+  #         cp /pbft-shared/validators/validator.priv /etc/sawtooth/keys/validator.priv
+  #       fi &&
+  #       if [ ! -e /etc/sawtooth/keys/validator.priv ]; then
+  #         sawadm keygen
+  #         mkdir -p /pbft-shared/validators || true
+  #         cp /etc/sawtooth/keys/validator.pub /pbft-shared/validators/validator.pub
+  #         cp /etc/sawtooth/keys/validator.priv /pbft-shared/validators/validator.priv
+  #       fi &&
+  #       if [ ! -e config-genesis.batch ]; then
+  #         sawset genesis -k /etc/sawtooth/keys/validator.priv -o config-genesis.batch
+  #       fi &&
+  #       while [[ ! -f /pbft-shared/validators/validator-1.pub || \
+  #                ! -f /pbft-shared/validators/validator-2.pub || \
+  #                ! -f /pbft-shared/validators/validator-3.pub || \
+  #                ! -f /pbft-shared/validators/validator-4.pub ]];
+  #       do sleep 1; done
+  #       echo sawtooth.consensus.pbft.members=\\['\"'$$(cat /pbft-shared/validators/validator.pub)'\"','\"'$$(cat /pbft-shared/validators/validator-1.pub)'\"','\"'$$(cat /pbft-shared/validators/validator-2.pub)'\"','\"'$$(cat /pbft-shared/validators/validator-3.pub)'\"','\"'$$(cat /pbft-shared/validators/validator-4.pub)'\"'\\] &&
+  #       if [ ! -e config.batch ]; then
+  #        sawset proposal create \
+  #           -k /etc/sawtooth/keys/validator.priv \
+  #           sawtooth.consensus.algorithm.name=pbft \
+  #           sawtooth.consensus.algorithm.version=1.0 \
+  #           sawtooth.consensus.pbft.members=\\['\"'$$(cat /pbft-shared/validators/validator.pub)'\"','\"'$$(cat /pbft-shared/validators/validator-1.pub)'\"','\"'$$(cat /pbft-shared/validators/validator-2.pub)'\"','\"'$$(cat /pbft-shared/validators/validator-3.pub)'\"','\"'$$(cat /pbft-shared/validators/validator-4.pub)'\"'\\] \
+  #           sawtooth.publisher.max_batches_per_block=1200 \
+  #           -o config.batch
+  #       fi &&
+  #       if [ ! -e /var/lib/sawtooth/genesis.batch ]; then
+  #         sawadm genesis config-genesis.batch config.batch
+  #       fi &&
+  #       if [ ! -e /root/.sawtooth/keys/my_key.priv ]; then
+  #         sawtooth keygen my_key
+  #       fi &&
+  #       sawtooth-validator -vv \
+  #         --endpoint tcp://validator-0:8800 \
+  #         --bind component:tcp://eth0:4004 \
+  #         --bind consensus:tcp://eth0:5050 \
+  #         --bind network:tcp://eth0:8800 \
+  #         --scheduler parallel \
+  #         --peering static \
+  #         --maximum-peer-connectivity 10000
+  #     "
 
   validator-1:
     image: hyperledger/sawtooth-validator:chime

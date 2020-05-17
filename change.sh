@@ -60,7 +60,8 @@ if [ $CONSENSUS = "pbft" ]; then
           --url http://rest-api-0:8008 \
           sawtooth.consensus.algorithm.name=pbft \
           sawtooth.consensus.algorithm.version=0.1 \
-          sawtooth.consensus.pbft.members=[\"$(cat /pbft-shared/validators/validator-0.pub)\",\"$(cat /pbft-shared/validators/validator-1.pub)\",\"$(cat /pbft-shared/validators/validator-2.pub)\",\"$(cat /pbft-shared/validators/validator-3.pub)\",\"$(cat /pbft-shared/validators/validator-4.pub)\"]
+          sawtooth.consensus.pbft.members=[\""$(cat /pbft-shared/validators/validator-0.pub)\"",\""$(cat /pbft-shared/validators/validator-1.pub)\"",\""$(cat /pbft-shared/validators/validator-2.pub)\"",\""$(cat /pbft-shared/validators/validator-3.pub)\"",\""$(cat /pbft-shared/validators/validator-4.pub)\""]
+
       '
 fi;
 # docker restart $(docker ps -aq) 

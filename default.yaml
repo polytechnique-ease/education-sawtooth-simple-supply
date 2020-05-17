@@ -57,8 +57,9 @@ services:
             - poet-shared:/poet-shared
         command: |
             bash -c "
-            sawadm keygen --force && \
-            sawtooth keygen my_key && \
+            if [ ! -e /etc/sawtooth/keys/validator.priv ]; then
+                sawadm keygen --force && \
+            fi &&
             sawset genesis -k /root/.sawtooth/keys/my_key.priv && \
             sawadm genesis config-genesis.batch && \
             sawtooth-validator -vv \

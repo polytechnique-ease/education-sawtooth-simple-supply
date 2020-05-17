@@ -22,7 +22,7 @@ volumes:
 services:
 
     settings-tp:
-        image: hyperledger/sawtooth-settings-tp:1.2
+        image: hyperledger/sawtooth-settings-tp:chime
         container_name: sawtooth-settings-tp
         depends_on:
             - validator-0
@@ -37,7 +37,15 @@ services:
             - '8008:8008'
         depends_on:
             - validator-0
-        entrypoint: sawtooth-rest-api -vv -C tcp://validator-0:4004 --bind rest-api:8008
+        entrypoint: devmode-engine-rust --connect tcp://validator-0:5050
+
+    raft-engine:
+        image: hyperledger/sawtooth-raft-engine
+        container_name: sawtooth-raft-engine-rust-default
+        volumes:
+            - .:/project/sawtooth-raft
+        working_dir: /project/sawtooth-raft/
+        command: ./target/debug/raft-engine --connect tcp://validator-0:5050 -v 
 
     validator-0:
         image: hyperledger/sawtooth-validator:chime
@@ -66,12 +74,9 @@ services:
             stop_signal: SIGKILL
 
     devmode-engine:
-        image: hyperledger/sawtooth-devmode-engine-rust:1.2
+        image: hyperledger/sawtooth-devmode-engine-rust:chime
         expose:
             - 5050
         ports:
             - '5050:5050'
-        container_name: sawtooth-devmode-engine-rust-default
-        depends_on:
-            - validator-0
-        entrypoint: devmode-engine-rust --connect tcp://validator-0:5050
+        container_name: 0

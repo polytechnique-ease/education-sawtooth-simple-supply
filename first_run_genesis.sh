@@ -43,6 +43,5 @@ set -e
   fi
 
   if [ ! -e /root/.sawtooth/keys/my_key.priv ]; then
-   echo "test"
-    sawtooth keygen my_key
+   sawtooth keygen my_key
   fi

@@ -38,14 +38,13 @@ services:
         depends_on:
             - validator-0
         entrypoint: devmode-engine-rust --connect tcp://validator-0:5050
-
     raft-engine:
         image: hyperledger/sawtooth-raft-engine
         container_name: sawtooth-raft-engine-rust-default
         volumes:
             - .:/project/sawtooth-raft
         working_dir: /project/sawtooth-raft/
-        command: ./target/debug/raft-engine --connect tcp://validator-0:5050 -v 
+        command: raft-engine --connect tcp://validator-0:5050 -v 
 
     validator-0:
         image: hyperledger/sawtooth-validator:chime

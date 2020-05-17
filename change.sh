@@ -46,7 +46,10 @@ if [ $CONSENSUS = "poet" ]; then
 fi;
 
 if [ $CONSENSUS = "devmode" ]; then
-    docker exec sawtooth-shell-default bash -c '
+    docker exec sawtooth-validator bash -c '
+        if [ ! -e config-genesis.batch ]; then
+          sawset genesis -k /etc/sawtooth/keys/validator.priv -o config-genesis.batch
+        fi &&
         sawset proposal create -k /etc/sawtooth/keys/validator.priv \
         sawtooth.consensus.algorithm.name=Devmode \
         sawtooth.consensus.algorithm.version=0.1 \

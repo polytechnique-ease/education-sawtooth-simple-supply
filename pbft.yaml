@@ -63,7 +63,7 @@ services:
       bash -c "
         sawtooth-rest-api \
           --connect tcp://validator-0:4004 \
-          --bind rest-api-0:8008
+          --bind rest-api:8008
       "
     stop_signal: SIGKILL
   rest-api-1:

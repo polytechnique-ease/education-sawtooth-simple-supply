@@ -56,7 +56,6 @@ if [ $CONSENSUS = "devmode" ]; then
         fi &&
 fi;
 
-
 if [ $CONSENSUS = "raft" ]; then
     docker exec sawtooth-validator bash -c '
         if [ ! -e config-genesis.batch ]; then
@@ -65,15 +64,21 @@ if [ $CONSENSUS = "raft" ]; then
         sawset proposal create -k /etc/sawtooth/keys/validator.priv \
         sawtooth.consensus.algorithm.name=raft \
         sawtooth.consensus.algorithm.version=0.1 \
-        sawtooth.consensus.raft.peers=["$(cat /etc/sawtooth/keys/validator.pub)"] && \
-        sawtooth-validator -vv \
-          --endpoint tcp://validator:8800 \
-          --bind consensus:tcp://eth0:5050 \
-          --bind component:tcp://*:* \
-          --peering static
+        sawtooth.consensus.raft.peers=[\""$(cat /etc/sawtooth/keys/validator.pub)\""] -o config.batch && \
+        sawset proposal create -k /etc/sawtooth/keys/validator.priv \
+        -o raft-settings.batch \
+        sawtooth.consensus.raft.heartbeat_tick=2 \
+        sawtooth.consensus.raft.election_tick=20 \
+        sawtooth.consensus.raft.period=3000 \
+        sawtooth.publisher.max_batches_per_block=100 && \
+        sawadm genesis config-genesis.batch config.batch raft-settings.batch && \
+        if [ ! -e /var/lib/sawtooth/genesis.batch ]; then
+          sawadm genesis config-genesis.batch config.batch raft-settings.batch
+        fi 
         '
 fi;
 
 
 docker exec sawtooth-validator bash -c '
-$(cat /pbft-shared/validators/validator-2.pub)' 
+"$(cat /pbft-shared/validators/validator.pub)"' 
+

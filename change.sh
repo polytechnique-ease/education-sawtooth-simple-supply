@@ -52,3 +52,22 @@ if [ $CONSENSUS = "devmode" ]; then
         sawtooth.consensus.algorithm.version=0.1 \
         -o config.batch'
 fi;
+
+
+if [ $CONSENSUS = "raft" ]; then
+    docker exec sawtooth-validator bash -c '
+        sawset proposal create --url http://ec2-34-207-173-85.compute-1.amazonaws.com:8008 -k /etc/sawtooth/keys/validator.priv \
+        sawtooth.consensus.algorithm.name=raft \
+        sawtooth.consensus.algorithm.version=0.1 \
+        sawtooth.consensus.raft.peers=["$(cat /etc/sawtooth/keys/validator.pub)"] && \
+        sawtooth-validator -vv \
+          --endpoint tcp://validator:8800 \
+          --bind consensus:tcp://eth0:5050 \
+          --bind network:tcp://eth0:8800 \
+          --peering static
+        '
+fi;
+
+
+docker exec sawtooth-validator bash -c '
+$(cat /pbft-shared/validators/validator-2.pub)' 

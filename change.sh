@@ -1,7 +1,5 @@
 #!/bin/bash
-
 CONSENSUS="$1"
-
 if [ $CONSENSUS = "poet" ]; then
     docker exec sawtooth-validator bash -c '
         if [ -e /pbft-shared/validators/validator.priv ]; then
@@ -21,7 +19,7 @@ if [ $CONSENSUS = "poet" ]; then
                  ! -f /pbft-shared/validators/validator-2.pub || \
                  ! -f /pbft-shared/validators/validator-3.pub || \
                  ! -f /pbft-shared/validators/validator-4.pub ]];
-        do sleep 1; done;
+        do sleep 1; done
         echo sawtooth.consensus.pbft.members=\\['\"'$$(cat /pbft-shared/validators/validator.pub)'\"','\"'$$(cat /pbft-shared/validators/validator-1.pub)'\"','\"'$$(cat /pbft-shared/validators/validator-2.pub)'\"','\"'$$(cat /pbft-shared/validators/validator-3.pub)'\"','\"'$$(cat /pbft-shared/validators/validator-4.pub)'\"'\\] &&
         if [ ! -e config.batch ]; then
          sawset proposal create \
@@ -39,12 +37,14 @@ if [ $CONSENSUS = "poet" ]; then
           sawtooth keygen my_key
         fi &&
         sawtooth-validator -vv \
+          --endpoint tcp://validator-0:8800 \
           --bind consensus:tcp://eth0:5050 \
+          --bind network:tcp://eth0:8800 \
           --scheduler parallel \
-                  --peering static \
-          --maximum-peer-connectivity 10000'
+          --peering static \
+          --maximum-peer-connectivity 10000
+        '
 fi;
-
 if [ $CONSENSUS = "devmode" ]; then
     docker exec sawtooth-validator bash -c '
         if [ ! -e config-genesis.batch ]; then
@@ -53,10 +53,8 @@ if [ $CONSENSUS = "devmode" ]; then
         sawset proposal create -k /etc/sawtooth/keys/validator.priv \
         sawtooth.consensus.algorithm.name=Devmode \
         sawtooth.consensus.algorithm.version=0.1 \
-        sawtooth.consensus.raft.peers=["$(cat /etc/sawtooth/keys/validator.pub)"] -o config.batch && \
-        if [ ! -e /var/lib/sawtooth/genesis.batch ]; then
-          sawadm genesis config-genesis.batch config.batch
-        fi &&
+        -o config.batch && \
+        '
 fi;
 
 if [ $CONSENSUS = "raft" ]; then
@@ -74,14 +72,10 @@ if [ $CONSENSUS = "raft" ]; then
         sawtooth.consensus.raft.election_tick=20 \
         sawtooth.consensus.raft.period=3000 \
         sawtooth.publisher.max_batches_per_block=100 && \
-        sawadm genesis config-genesis.batch config.batch raft-settings.batch && \
         if [ ! -e /var/lib/sawtooth/genesis.batch ]; then
           sawadm genesis config-genesis.batch config.batch raft-settings.batch
         fi 
         '
 fi;
-
-
 docker exec sawtooth-validator bash -c '
-"$(cat /pbft-shared/validators/validator.pub)"' 
-
+"$(cat /pbft-shared/validators/validator.pub)"'

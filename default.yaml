@@ -12,22 +12,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ------------------------------------------------------------------------------
-
 version: '2.1'
-
-
 volumes:
-    poet-shared:
-
+    pbft-shared:
 services:
-
+    intkey-tp-0:
+        image: hyperledger/sawtooth-intkey-tp-python:chime
+        container_name: sawtooth-intkey-tp-python-default-0
+        expose:
+          - 4004
+        command: intkey-tp-python -C tcp://validator-0:4004
+        stop_signal: SIGKILL
     settings-tp:
         image: hyperledger/sawtooth-settings-tp:chime
         container_name: sawtooth-settings-tp
         depends_on:
             - validator-0
         entrypoint: settings-tp -vv -C tcp://validator-0:4004
-
     rest-api:
         image: hyperledger/sawtooth-rest-api:chime
         container_name: sawtooth-rest-api
@@ -37,15 +38,7 @@ services:
             - '8008:8008'
         depends_on:
             - validator-0
-        entrypoint: devmode-engine-rust --connect tcp://validator-0:5050
-    raft-engine:
-        image: hyperledger/sawtooth-raft-engine
-        container_name: sawtooth-raft-engine-rust-default
-        volumes:
-            - .:/project/sawtooth-raft
-        working_dir: /project/sawtooth-raft/
-        command: raft-engine --connect tcp://validator-0:5050 -v 
-
+        entrypoint: sawtooth-rest-api -vv -C tcp://validator-0:4004 --bind rest-api:8008
     validator-0:
         image: hyperledger/sawtooth-validator:chime
         container_name: sawtooth-validator
@@ -54,29 +47,36 @@ services:
         ports:
             - '4004:4004'
         volumes:
-            - poet-shared:/poet-shared
+            - pbft-shared:/pbft-shared
         command: |
             bash -c "
             if [ ! -e /etc/sawtooth/keys/validator.priv ]; then
-                sawadm keygen --force && \
-            fi &&
-            sawset genesis -k /root/.sawtooth/keys/my_key.priv && \
-            sawadm genesis config-genesis.batch && \
+                sawadm keygen --force
+            fi && 
             sawtooth-validator -vv \
             --endpoint tcp://validator-0:8800 \
             --bind component:tcp://eth0:4004 \
             --bind network:tcp://eth0:8800 \
-            "
-        environment:
-            PYTHONPATH: "/project/sawtooth-core/consensus/poet/common:\
-                /project/sawtooth-core/consensus/poet/simulator:\
-                /project/sawtooth-core/consensus/poet/core"
-            stop_signal: SIGKILL
+            --bind consensus:tcp://eth0:5050 \
 
+            --peers tcp://validator-0:8800 \
+            --scheduler parallel \
+            --peering static
+            "
     devmode-engine:
         image: hyperledger/sawtooth-devmode-engine-rust:chime
         expose:
             - 5050
         ports:
             - '5050:5050'
-        container_name: 0
+        container_name: sawtooth-devmode-engine-rust-default
+        depends_on:
+            - validator-0
+        entrypoint: devmode-engine-rust --connect tcp://validator-0:5050
+    raft-engine:
+        image: hyperledger/sawtooth-raft-engine
+        container_name: sawtooth-raft-engine-rust-default
+        volumes:
+            - .:/project/sawtooth-raft
+        working_dir: /project/sawtooth-raft/
+        command: raft-engine --connect tcp://validator-0:5050 -v

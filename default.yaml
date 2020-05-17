@@ -78,6 +78,10 @@ services:
     raft-engine:
         image: hyperledger/sawtooth-raft-engine
         container_name: sawtooth-raft-engine-rust-default
+        expose:
+            - 5050
+        ports:
+            - '5050:5050'
         volumes:
             - .:/project/sawtooth-raft
         working_dir: /project/sawtooth-raft/

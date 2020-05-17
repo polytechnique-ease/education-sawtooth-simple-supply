@@ -27,7 +27,9 @@ if [ $CONSENSUS = "poet" ]; then
              sawtooth.poet.target_wait_time=5 \
              sawtooth.poet.initial_wait_time=25 \
              sawtooth.publisher.max_batches_per_block=100 \
-          -o poet-settings.batch && \'
+          -o poet-settings.batch  \'
+    sleep 3
+    docker restart sawtooth-validator
 fi;
 
 if [ $CONSENSUS = "devmode" ]; then
@@ -39,4 +41,6 @@ if [ $CONSENSUS = "devmode" ]; then
         sawtooth.consensus.algorithm.name=Devmode \
         sawtooth.consensus.algorithm.version=0.1 \
         -o config.batch'
+    sleep 3
+    docker restart sawtooth-validator
 fi;

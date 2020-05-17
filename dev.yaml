@@ -110,8 +110,10 @@
           image: adminer
           container_name: simple-supply-adminer
           restart: always
+          expose:
+            - 8090
           ports:
-              - '8090:8090'
+              - '8090:8080'
   
       curator-app:
           build: ./curator_app

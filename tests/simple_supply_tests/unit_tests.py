@@ -38,7 +38,7 @@ def make_key():
     return signer
 
 
-REST_URL = 'rest-api:8008'
+REST_URL = 'rest-api-0:8008'
 BATCH_KEY = make_key()
 LOGGER = logging.getLogger(__name__)
 

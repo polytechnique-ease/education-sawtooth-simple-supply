@@ -11,9 +11,6 @@ if [ $CONSENSUS = "poet" ]; then
         while [ ! -f /poet-shared/poet-enclave-basename ]; do sleep 1; done && \
         while [ ! -f /poet-shared/poet.batch ]; do sleep 1; done && \
         cp /poet-shared/poet.batch / && \
-        sawset genesis \
-          -k /etc/sawtooth/keys/validator.priv \
-          -o config-genesis.batch && \
         sawset proposal create \
           -k /etc/sawtooth/keys/validator.priv \
           sawtooth.consensus.algorithm.name=PoET \
@@ -36,7 +33,6 @@ if [ $CONSENSUS = "devmode" ]; then
     docker exec sawtooth-validator bash -c '
         sawadm keygen --force
         sawtooth keygen --force my_key
-        sawset genesis -k /root/.sawtooth/keys/my_key.priv
         sawset proposal create -k /root/.sawtooth/keys/my_key.priv \
         sawtooth.consensus.algorithm.name=Devmode \
         sawtooth.consensus.algorithm.version=0.1 \

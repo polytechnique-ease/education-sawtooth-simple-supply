@@ -12,8 +12,8 @@ in `rest_api/simple_supply_rest_api/route_handler.py`
 navigate to the project's root directory, then use
 this command:
 
-```bash
-docker-compose up
+```
+./start.sh
 ```
 
 This command starts all Simple Supply components in separate containers.
@@ -21,3 +21,25 @@ This command starts all Simple Supply components in separate containers.
 The available HTTP endpoints are:
 - Client: **http://localhost:8040**
 - Simple Supply REST API: **http://localhost:8000**
+
+To reset the network:
+
+```
+./reset.sh
+```
+
+Change Consensus:
+
+```
+./change.sh devmode
+
+./change.sh poet
+
+./change.sh raft
+```
+
+Check consensus
+
+```
+docker exec sawtooth-validator-default-0 bash -c 'sawtooth settings list --url http://rest-api-0:8008'
+```

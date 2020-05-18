@@ -17,39 +17,19 @@ version: '2.1'
 
 services:
 
-    # intkey-tp-0:
-    #     image: hyperledger/sawtooth-intkey-tp-python:chime
-    #     container_name: sawtooth-intkey-tp-python-default-0
-    #     expose:
-    #       - 4004
-    #     command: intkey-tp-python -C tcp://validator-0:4004
-    #     stop_signal: SIGKILL
-
-    xo-tp-python:
-        image: hyperledger/sawtooth-xo-tp-python:chime
-        container_name: sawtooth-xo-tp-python-default
-        entrypoint: xo-tp-python -vv -C tcp://validator-0:4004
-                
-    # settings-tp:
-    #     image: hyperledger/sawtooth-settings-tp:chime
-    #     container_name: sawtooth-settings-tp
-    #     depends_on:
-    #         - validator-0
-    #     entrypoint: settings-tp -vv -C tcp://validator-0:4004
-
-    # rest-api:
-    #     image: hyperledger/sawtooth-rest-api:chime
-    #     container_name: sawtooth-rest-api
-    #     expose:
-    #         - 8008
-    #     ports:
-    #         - '8008:8008'
-    #     depends_on:
-    #         - validator-0
-    #     entrypoint: sawtooth-rest-api -vv -C tcp://validator-0:4004 --bind rest-api:8008
+    rest-api:
+        image: hyperledger/sawtooth-rest-api:latest
+        container_name: sawtooth-rest-api
+        expose:
+            - 8008
+        ports:
+            - '8008:8008'
+        # depends_on:
+        #     - validator-0
+        entrypoint: sawtooth-rest-api -vv -C tcp://validator-0:4004 --bind rest-api:8008
 
     # validator-0:
-    #     image: hyperledger/sawtooth-validator:chime
+    #     image: hyperledger/sawtooth-validator:latest
     #     container_name: sawtooth-validator
     #     expose:
     #         - 4004
@@ -81,9 +61,7 @@ services:
     #         --maximum-peer-connectivity 10000"
 
     devmode-engine:
-        image: hyperledger/sawtooth-devmode-engine-rust:chime
-        expose:
-            - 5050
+        image: hyperledger/sawtooth-devmode-engine-rust:latest
         ports:
             - '5050:5050'
         container_name: sawtooth-devmode-engine-rust-default

@@ -13,7 +13,7 @@ if [ ! -e /root/.sawtooth/keys/my_key.priv ]; then
           sawset proposal create -k /root/.sawtooth/keys/my_key.priv \
             sawtooth.consensus.algorithm.name=Devmode \
             sawtooth.consensus.algorithm.version=0.1 \
-            --url http://rest-api:8008 
+            --url http://rest-api-0:8008 
         '
 fi;
 
@@ -28,9 +28,10 @@ if [ $CONSENSUS = "raft" ]; then
           sawtooth.consensus.algorithm.name=raft \
           sawtooth.consensus.algorithm.version=0.1 \
           sawtooth.consensus.raft.peers=[\""$(cat /etc/sawtooth/keys/validator.pub)\""] \
-          --url http://rest-api:8008 && \
+          --url http://rest-api-0:8008 && \
         sawset proposal create -k /root/.sawtooth/keys/my_key.priv \
-          --url http://rest-api:8008 \
+          --url http://rest-api-0:8008 \
+
           sawtooth.consensus.raft.heartbeat_tick=2 \
           sawtooth.consensus.raft.election_tick=20 \
           sawtooth.consensus.raft.period=3000 \

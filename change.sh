@@ -31,20 +31,15 @@ fi;
 
 # docker restart sawtooth-validator-default-0 && docker exec sawtooth-validator-default-0 bash -c 'sawtooth settings list --url http://rest-api-0:8008'
 
-# if [ $CONSENSUS = "pbft" ]; then
-#     docker exec sawtooth-validator-default-0 bash -c '
-#         if [ ! -e /pbft-shared/validators/validator-0.pub ]; then
-#           mkdir -p /pbft-shared/validators || true
-#           cp /etc/sawtooth/keys/validator.pub /pbft-shared/validators/validator-0.pub
-#           cp /etc/sawtooth/keys/validator.priv /pbft-shared/validators/validator-0.priv
-#         fi &&
-#         sawset proposal create -k /root/.sawtooth/keys/my_key.priv \
-#           --url http://rest-api-0:8008 \
-#           sawtooth.consensus.algorithm.name=pbft \
-#           sawtooth.consensus.algorithm.version=0.1 \
-#           sawtooth.consensus.pbft.members=[\""$(cat /pbft-shared/validators/validator-0.pub)\"",\""$(cat /pbft-shared/validators/validator-1.pub)\"",\""$(cat /pbft-shared/validators/validator-2.pub)\"",\""$(cat /pbft-shared/validators/validator-3.pub)\"",\""$(cat /pbft-shared/validators/validator-4.pub)\""]
-#       '
-# fi;
+if [ $CONSENSUS = "pbft" ]; then
+    docker exec sawtooth-validator-default-0 bash -c '
+        sawset proposal create -k /etc/sawtooth/keys/validator.priv \
+          --url http://rest-api-0:8008 \
+          sawtooth.consensus.algorithm.name=pbft \
+          sawtooth.consensus.algorithm.version=0.1 \
+          sawtooth.consensus.pbft.members=[\""$(cat /poet-shared/validators/validator-0.pub)\"",\""$(cat /poet-shared/validators/validator-1.pub)\"",\""$(cat /poet-shared/validators/validator-2.pub)\"",\""$(cat /poet-shared/validators/validator-3.pub)\"",\""$(cat /poet-shared/validators/validator-4.pub)\""]
+      '
+fi;
 
 if [ $CONSENSUS = "poet" ]; then
     docker exec sawtooth-validator-default-0 bash -c '
@@ -52,9 +47,9 @@ if [ $CONSENSUS = "poet" ]; then
             -k /etc/sawtooth/keys/validator.priv \
             sawtooth.consensus.algorithm.name=PoET \
             sawtooth.consensus.algorithm.version=0.1 \
-            sawtooth.poet.report_public_key_pem=\""$(cat /pbft-shared/simulator_rk_pub.pem)\"" \
-            sawtooth.poet.valid_enclave_measurements=$(cat /pbft-shared/poet-enclave-measurement) \
-            sawtooth.poet.valid_enclave_basenames=$(cat /pbft-shared/poet-enclave-basename) \
+            sawtooth.poet.report_public_key_pem=\""$(cat /poet-shared/simulator_rk_pub.pem)\"" \
+            sawtooth.poet.valid_enclave_measurements=$(cat /poet-shared/poet-enclave-measurement) \
+            sawtooth.poet.valid_enclave_basenames=$(cat /poet-shared/poet-enclave-basename) \
             --url http://rest-api-0:8008 && \
           sawset proposal create \
             -k /etc/sawtooth/keys/validator.priv \

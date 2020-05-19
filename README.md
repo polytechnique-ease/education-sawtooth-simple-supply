@@ -35,6 +35,8 @@ Change Consensus:
 
 ./change.sh poet
 
+./change.sh pbft
+
 ./change.sh raft
 ```
 

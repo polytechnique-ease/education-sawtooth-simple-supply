@@ -44,6 +44,9 @@
           while [ ! -f /poet-shared/poet-enclave-basename ]; do sleep 1; done && \
           while [ ! -f /poet-shared/poet.batch ]; do sleep 1; done && \
           cp /poet-shared/poet.batch / && \
+          mkdir -p /poet-shared/validators || true && \
+          cp /etc/sawtooth/keys/validator.pub /poet-shared/validators/validator-0.pub && \
+          cp /etc/sawtooth/keys/validator.priv /poet-shared/validators/validator-0.priv && \
           sawset genesis \
             -k /etc/sawtooth/keys/validator.priv \
             -o config-genesis.batch && \
@@ -93,6 +96,9 @@
           sawadm keygen --force && \
           mkdir -p /poet-shared/validator-1 || true && \
           cp -a /etc/sawtooth/keys /poet-shared/validator-1/ && \
+          mkdir -p /poet-shared/validators || true && \
+          cp /etc/sawtooth/keys/validator.pub /poet-shared/validators/validator-1.pub && \
+          cp /etc/sawtooth/keys/validator.priv /poet-shared/validators/validator-1.priv && \
           sawtooth-validator -v \
               --bind network:tcp://eth0:8800 \
               --bind component:tcp://eth0:4004 \
@@ -123,6 +129,9 @@
           sawadm keygen --force && \
           mkdir -p /poet-shared/validator-2 && \
           cp -a /etc/sawtooth/keys /poet-shared/validator-2/ && \
+          mkdir -p /poet-shared/validators || true && \
+          cp /etc/sawtooth/keys/validator.pub /poet-shared/validators/validator-2.pub && \
+          cp /etc/sawtooth/keys/validator.priv /poet-shared/validators/validator-2.priv && \
           sawtooth-validator -v \
               --bind network:tcp://eth0:8800 \
               --bind component:tcp://eth0:4004 \
@@ -153,6 +162,9 @@
           sawadm keygen --force && \
           mkdir -p /poet-shared/validator-3 && \
           cp -a /etc/sawtooth/keys /poet-shared/validator-3/ && \
+          mkdir -p /poet-shared/validators || true && \
+          cp /etc/sawtooth/keys/validator.pub /poet-shared/validators/validator-3.pub && \
+          cp /etc/sawtooth/keys/validator.priv /poet-shared/validators/validator-3.priv && \
           sawtooth-validator -v \
               --bind network:tcp://eth0:8800 \
               --bind component:tcp://eth0:4004 \
@@ -183,6 +195,9 @@
           sawadm keygen --force && \
           mkdir -p /poet-shared/validator-4 && \
           cp -a /etc/sawtooth/keys /poet-shared/validator-4/ && \
+          mkdir -p /poet-shared/validators || true && \
+          cp /etc/sawtooth/keys/validator.pub /poet-shared/validators/validator-4.pub && \
+          cp /etc/sawtooth/keys/validator.priv /poet-shared/validators/validator-4.priv && \
           sawtooth-validator -v \
               --bind network:tcp://eth0:8800 \
               --bind component:tcp://eth0:4004 \
@@ -497,4 +512,37 @@
       command: poet-validator-registry-tp -C tcp://validator-4:4004
       environment:
         PYTHONPATH: /project/sawtooth-core/consensus/poet/common
+      stop_signal: SIGKILL
+
+
+# -------------=== pbft engines ===-------------
+
+    pbft-0:
+      image: hyperledger/sawtooth-pbft-engine:latest
+      container_name: sawtooth-pbft-engine-default-0
+      command: pbft-engine -vv --connect tcp://validator-0:5050
+      stop_signal: SIGKILL
+
+    pbft-1:
+      image: hyperledger/sawtooth-pbft-engine:latest
+      container_name: sawtooth-pbft-engine-default-1
+      command: pbft-engine -vv --connect tcp://validator-1:5050
+      stop_signal: SIGKILL
+
+    pbft-2:
+      image: hyperledger/sawtooth-pbft-engine:latest
+      container_name: sawtooth-pbft-engine-default-2
+      command: pbft-engine -vv --connect tcp://validator-2:5050
+      stop_signal: SIGKILL
+
+    pbft-3:
+      image: hyperledger/sawtooth-pbft-engine:latest
+      container_name: sawtooth-pbft-engine-default-3
+      command: pbft-engine -vv --connect tcp://validator-3:5050
+      stop_signal: SIGKILL
+
+    pbft-4:
+      image: hyperledger/sawtooth-pbft-engine:latest
+      container_name: sawtooth-pbft-engine-default-4
+      command: pbft-engine -vv --connect tcp://validator-4:5050
       stop_signal: SIGKILL
